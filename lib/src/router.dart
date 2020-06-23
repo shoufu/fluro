@@ -38,7 +38,7 @@ class Router {
     return _routeTree.matchRoute(path);
   }
 
-  bool pop(BuildContext context) => Navigator.pop(context);
+  void pop(BuildContext context) => Navigator.pop(context);
 
   /// Navigates using a context that has a [Navigator] attached to it
   /// (example, the first screen of a [MaterialApp] will create a [BuildContext]
@@ -85,16 +85,16 @@ class Router {
   /// Navigates using [NavigatorState] that can be easily stored statically
   /// in a [GlobalKey] at the beginning of the [MaterialApp]
   Future navigateWithNavigatorState(NavigatorState navigatorState, String path,
-                    {bool replace = false,
-                      bool clearStack = false,
-                      TransitionType transition,
-                      Duration transitionDuration = const Duration(milliseconds: 250),
-                      RouteTransitionsBuilder transitionBuilder}) {
+      {bool replace = false,
+      bool clearStack = false,
+      TransitionType transition,
+      Duration transitionDuration = const Duration(milliseconds: 250),
+      RouteTransitionsBuilder transitionBuilder}) {
     BuildContext context = navigatorState.context;
     RouteMatch routeMatch = matchRoute(context, path,
-            transitionType: transition,
-            transitionsBuilder: transitionBuilder,
-            transitionDuration: transitionDuration);
+        transitionType: transition,
+        transitionsBuilder: transitionBuilder,
+        transitionDuration: transitionDuration);
     Route<dynamic> route = routeMatch.route;
     Completer completer = Completer();
     Future future = completer.future;
@@ -106,12 +106,11 @@ class Router {
       }
       if (route != null) {
         if (clearStack) {
-          future =
-                  navigatorState.pushAndRemoveUntil(route, (check) => false);
+          future = navigatorState.pushAndRemoveUntil(route, (check) => false);
         } else {
           future = replace
-                  ? navigatorState.pushReplacement(route)
-                  : navigatorState.push(route);
+              ? navigatorState.pushReplacement(route)
+              : navigatorState.push(route);
         }
         completer.complete();
       } else {
